@@ -52,4 +52,4 @@ end
 %disp('目标函数取最小值时的自变量：')
 xm=pg;
 %disp('目标函数的最小值为：')
-fv=fitness(pg);
+fv=fitness(pg,soc);

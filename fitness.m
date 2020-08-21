@@ -1,4 +1,4 @@
-function F=fitness(i,soc)
+function [F,delta_soc]=fitness(i,soc)
 % 输入：hor_con范围内的电流i (i为hor_con*4),电池的当前soc(1*4)
 % 输出：适应度函数
 global R0 Rp Q up I SOC Uoc Pi Pload T hor_pre

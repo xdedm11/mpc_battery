@@ -35,8 +35,8 @@ soc=0.2*ones(1,4,num_con);
 delta_soc=zeros(hor_pre,4,num_con);
 
 for t=1:num_con
-    t
-    soc(1,:,t)=soc(1,:,t)+sum(delta_soc(1:hor_con,:,t),1);
+    t    
     [im(:,:,t),fm(t)]=PSO(@fitness,50,1.5,2.5,0.5,100,hor_con,soc(1,:,t));
-%   i作用后的delta_soc(将fitness返回值添加deltasoc)
+    [~,delta_soc(:,:,t)]=fitness(im(:,:,t),soc(1,:,t));                     %   i作用后的delta_soc(将fitness返回值添加deltasoc)
+    soc(1,:,t)=soc(1,:,t)+sum(delta_soc(1:hor_con,:,t),1);
 end
