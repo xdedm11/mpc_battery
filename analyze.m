@@ -1,17 +1,49 @@
-%分析及绘图
-for k=1:10
-%[im(:,:,k),fm(k)] = PSO(@fitness,50,1.5,2.5,0.5,100,num);
-[fm(k),Eloss(k)]=fitnesse(im(:,:,k));
+global R0 up I SOC Uoc
+%% 电流
+process_i=zeros(hor_con*num_con,4);
+for j=1:num_con
+    process_i((hor_con*(j-1)+1):hor_con*j,:)=im(:,:,j);
 end
-subplot(2,1,1);
-plot(fm,'x')
-xlabel('实验次数');
-ylabel('目标函数')
-subplot(2,1,2);
-plot(Eloss,'x')
-xlabel('实验次数');
-ylabel('能量损耗/J')
-figure
-plot(2:100,Pbest(2:100,3))
-xlabel('迭代次数');
-ylabel('目标函数')
+figure(1)
+hold on
+for j=1:4
+    plot(process_i(:,j));
+end
+xlabel('时间/T (T=20s)')
+ylabel('充放电电流/C')
+%% 荷电状态
+process_delta_soc=zeros(hor_con*num_con,4);
+for j=1:num_con
+    process_delta_soc((hor_con*(j-1)+1):hor_con*j,:)=delta_soc(1:hor_con,:,j);
+end
+% process_soc=permute(soc,[3,2,1]); %11x4
+process_soc=zeros(hor_con*num_con+1,4);
+process_soc(1,:)=0.2*ones(1,4);
+for j=1:num_con*hor_con
+    process_soc(j+1,:)=process_soc(j,:)+process_delta_soc(j,:);
+end
+figure(2)
+hold on
+for j=1:4
+    plot(process_soc(:,j));
+end
+xlabel('时间/T (T=20s)')
+ylabel('SOC')
+%% 输出功率
+process_U=zeros(hor_con*num_con,4);
+process_Po=zeros(hor_con*num_con,4);
+for j=1:hor_con*num_con
+    for c=1:4
+        process_U(j,c)=Uoc(process_soc(j,c))+3.3*process_i(j,c)*R0(process_soc(j,c))+interp2(SOC,I,up,process_soc(j,c),process_i(j,c),'spline');
+        process_Po(j,c)=process_U(j,c)*process_i(j,c)*3.3;
+    end
+end
+sum_Po=sum(process_Po,2);
+figure(3)
+hold on
+for j=1:4
+    plot(process_Po(:,j));
+end
+plot(sum_Po)
+xlabel('时间/T (T=20s)')
+ylabel('输出功率/W')
