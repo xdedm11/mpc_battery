@@ -31,12 +31,12 @@ Pi=ones(hor_pre,4)*400;         %光伏输入功率
 im=zeros(hor_con,4,num_con);
 fm=zeros(1,num_con);
 
-soc=0.2*ones(1,4,num_con);
+soc=0.2*ones(1,4,num_con+1);
 delta_soc=zeros(hor_pre,4,num_con);
 
 for t=1:num_con
-    t    
+    t
     [im(:,:,t),fm(t)]=PSO(@fitness,50,1.5,2.5,0.5,100,hor_con,soc(1,:,t));
-    [~,delta_soc(:,:,t)]=fitness(im(:,:,t),soc(1,:,t));                     %   i作用后的delta_soc(将fitness返回值添加deltasoc)
-    soc(1,:,t)=soc(1,:,t)+sum(delta_soc(1:hor_con,:,t),1);
+    [~,delta_soc(:,:,t)]=fitness(im(:,:,t),soc(1,:,t));                     %i作用后的delta_soc(将fitness返回值添加deltasoc)
+    soc(1,:,t+1)=soc(1,:,t)+sum(delta_soc(1:hor_con,:,t),1);
 end
