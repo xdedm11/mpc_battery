@@ -32,6 +32,7 @@ im=zeros(hor_con,4,num_con);
 fm=zeros(1,num_con);
 
 soc=0.2*ones(1,4,num_con+1);
+soc(1,:,1)=[0.2,0.25,0.3,0.35];
 delta_soc=zeros(hor_pre,4,num_con);
 
 for t=1:num_con

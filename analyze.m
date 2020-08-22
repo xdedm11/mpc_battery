@@ -18,7 +18,8 @@ for j=1:num_con
 end
 % process_soc=permute(soc,[3,2,1]); %11x4
 process_soc=zeros(hor_con*num_con+1,4);
-process_soc(1,:)=0.2*ones(1,4);
+% process_soc(1,:)=0.2*ones(1,4);
+process_soc(1,:)=[0.2,0.25,0.3,0.35];
 for j=1:num_con*hor_con
     process_soc(j+1,:)=process_soc(j,:)+process_delta_soc(j,:);
 end
