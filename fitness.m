@@ -1,7 +1,7 @@
 function [F,delta_soc]=fitness(i,soc)
 % 输入：hor_con范围内的电流i (i为hor_con*4),电池的当前soc(1*4)
 % 输出：适应度函数
-global R0 Rp Q up I SOC Uoc Pi Pload T hor_pre
+global R0 Rp Q Uoc Pi Pload T hor_pre Up %up I SOC
 % 初始SOC
 % soc已传入
 delta_soc=zeros(hor_pre,4);
@@ -15,7 +15,7 @@ end
 for j=1:hor_pre
     %充电
     for c=1:4
-        U(j,c)=Uoc(soc(c))+3.3*i(j,c)*R0(soc(c))+interp2(SOC,I,up,soc(c),i(j,c),'spline');
+        U(j,c)=Uoc(soc(c))+3.3*i(j,c)*R0(soc(c))+Up(soc(c),i(j,c));
         Po(j,c)=U(j,c)*i(j,c)*3.3; 
         delta_soc(j,c)=(Pi(j,c)-Po(j,c))/U(j,c)/Q*T;
         if (soc(c)>0.9 && delta_soc(j,c)>0)||(soc(c)<0.1 && delta_soc(j,c)<0)
@@ -29,7 +29,7 @@ for j=1:hor_pre
         if i(j,c)<0.1||i(j,c)>0.9||Po(j,c)<0||Po(j,c)>1000||U(j,c)>72
             A=1;
         end
-        eloss(j,c)=(3.3*3.3*i(j,c)*i(j,c)*R0(soc(c))+interp2(SOC,I,up,soc(c),i(j,c),'spline')^2/Rp(soc(c)))*T+A*1e15;
+        eloss(j,c)=(3.3*3.3*i(j,c)*i(j,c)*R0(soc(c))+Up(soc(c),i(j,c))^2/Rp(soc(c)))*T+A*1e15;
     end
 end
 % 负载约束
@@ -58,5 +58,6 @@ end
 %输出功率与负载功率一致性
 ePo=abs(sum(Po')-Pload);
 EPo=sum(ePo);
-F=Eloss+Ediv+EPo*1000+B*1e15+C*1e20;
+% F=Eloss+Ediv*1000000+EPo*1000+B*1e15+C*1e20;
+F=Eloss+5e6*Ediv+EPo*100+B*1e15+C*1e20;
 end

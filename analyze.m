@@ -1,4 +1,4 @@
-global R0 up I SOC Uoc
+global R0 Uoc % up I SOC
 %% 电流
 process_i=zeros(hor_con*num_con,4);
 for j=1:num_con
@@ -35,7 +35,7 @@ process_U=zeros(hor_con*num_con,4);
 process_Po=zeros(hor_con*num_con,4);
 for j=1:hor_con*num_con
     for c=1:4
-        process_U(j,c)=Uoc(process_soc(j,c))+3.3*process_i(j,c)*R0(process_soc(j,c))+interp2(SOC,I,up,process_soc(j,c),process_i(j,c),'spline');
+        process_U(j,c)=Uoc(process_soc(j,c))+3.3*process_i(j,c)*R0(process_soc(j,c))+Up(process_soc(j,c),process_i(j,c));
         process_Po(j,c)=process_U(j,c)*process_i(j,c)*3.3;
     end
 end
