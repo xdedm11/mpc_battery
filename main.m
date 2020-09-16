@@ -22,11 +22,11 @@ Up=@(soc,i)26.63*soc^4+3.144*i*soc^3-38.64*soc^3-2.447*i*soc^2+18.2*soc^2+0.3376
 hor_pre=30;                     %预测范围
 hor_con=5;                      %控制范围
 T=20;                           %采样周期
-num_con=10;                     %迭代控制次数
+num_con=20;                     %迭代控制次数
 
 Q=3.3*3600;                     %电池容量为3.3Ah
 Pload=1000;                     %电池负载
-Pi=ones(hor_pre,4)*400;         %光伏输入功率
+Pi=ones(hor_pre,4)*250;         %光伏输入功率
 
 %% start
 im=zeros(hor_con,4,num_con);
