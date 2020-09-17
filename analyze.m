@@ -29,7 +29,7 @@ for j=1:4
     plot(process_soc(:,j));
 end
 xlabel('时间/T (T=20s)')
-ylabel('SOC')
+ylabel('SoC')
 %% 输出功率
 process_U=zeros(hor_con*num_con,4);
 process_Po=zeros(hor_con*num_con,4);
